@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "form-data": "^4.0.0",
+    "formdata-node": "^6.0.3",
+    "fs": "^0.0.1-security",
+    "mysql2": "^3.6.3",
+    "openai": "^4.19.0",
+    "path": "^0.12.7",
+    "sql": "^0.78.0",
+    "typechat": "^0.0.10"
+  },
+  "name": "typechat-singlestore",
+  "version": "1.0.0",
+  "main": "singlestoreConnection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "ts-node": "^10.9.1"
+  }
+}
