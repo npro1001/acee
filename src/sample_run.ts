@@ -6,7 +6,7 @@ import * as fs from "fs"
 import * as path from "path"
 import * as typechat from "typechat"
 import * as dotenv from "dotenv";
-import { Library } from "./schema"
+import { Question } from "./schema"
 import { processRequests } from "typechat"
 import { getPool } from "./singlestoreConnection"
 
@@ -14,12 +14,12 @@ dotenv.config();
 
 const model = typechat.createLanguageModel(process.env);
 const schema = fs.readFileSync(path.join(process.cwd(), "src/schema.ts"), "utf8"); //read the schema in
-const translator = typechat.createJsonTranslator<Library>(model, schema, "Library");
+const translator = typechat.createJsonTranslator<Question>(model, schema, "Question");
 
 
-function getBooks(library: Library) {
+function getBooks(query: Question) {
     // Process the items in the cart
-    void library;
+    void query;
 }
 
 const openai = new OpenAI();
@@ -32,33 +32,32 @@ processRequests("📚> ", process.argv[2], async (request) => {
         return;
     }
 
-    const library = response.data; //get the user response
-    let user_response = JSON.parse(JSON.stringify(library, undefined, 2)) //turn it into JSON
+    const query = response.data; //get the user response
+    let user_response = JSON.parse(JSON.stringify(query, undefined, 2)) //turn it into JSON
 
 
-    console.log(JSON.stringify(library, undefined, 2))
+    console.log(JSON.stringify(query, undefined, 2))
 
 
     //if there are any unknowns, it will display here
-    if (library.shelf.some(book => book.type === "unknown")) {
+    if (query.shelf.some(query => query.type === "unknown")) {
         console.log("I didn't understand the following:");
-        for (const book of library.shelf) {
-            if (book.type === "unknown") {
-                console.log(book.text);
+        for (const item of query.shelf) {
+            if (item.type === "unknown") {
+                console.log(item.text);
                 console.log("unknown")
             }
         }
         return;
     }
-    getBooks(library);
+    getBooks(query);
     console.log("Success!");
 
     let year = user_response.shelf[0].date;
-    let search_method = user_response.shelf[0].search_method.toLowerCase()
+    let search_method = (user_response.shelf[0].search_method != null ? user_response.shelf[0].search_method.toLowerCase() : null)
     let filter_by = user_response.shelf[0].filter_by
     let description = user_response.shelf[0].description
 
-    console.log(description)
    
     //user wants to search in database without vectors
     if(search_method == "sql")

@@ -78,7 +78,7 @@ const searchVec = (connection, embedding, filter_by) => {
         }
 
         // Process the query results
-        printResults("vector", results)
+        printResults("vector", results, filter_by)
 
     })
 
@@ -109,15 +109,14 @@ export function filterDB(connection, request, year) {
 
     //if year is detected filter by year as well
     let user_query
-    if(year)
-    {
-        user_query = 'SELECT * FROM dummy_data WHERE date='+year+' AND MATCH (title) AGAINST (\'' + request + '\')'
+    if (year) {
+        user_query = 'SELECT * FROM dummy_data WHERE date=' + year + ' AND MATCH (title) AGAINST (\'' + request + '\')'
     }
-    else{
+    else {
         user_query = 'SELECT * FROM dummy_data WHERE MATCH (title) AGAINST (\'' + request + '\')'
     }
 
-    
+
     connection.query(user_query, (err, results, fields) => {
         if (err) {
             console.error('Error querying the database:', err);
@@ -131,7 +130,7 @@ export function filterDB(connection, request, year) {
 }
 
 //print the results of the database query
-function printResults(type, results) {
+function printResults(type, results, filter) {
 
     if (type == "sql") {
         results.forEach(element => {
@@ -141,13 +140,27 @@ function printResults(type, results) {
         });
     }
 
-    else{
+    else {
 
-        results.forEach(element => {
+        //format for content
+        if (filter == "content") {
+            results.forEach(element => {
 
-            console.log(element.text.slice(0,100)+ "...\nSimilarity score: " + Math.round(element.score*100) + "%\n")
+                console.log(element.text.slice(0, 100) + "...\nSimilarity score: " + Math.round(element.score * 100) + "%\n")
 
-        });
+            });
+        }
+
+        //format for title
+        else {
+
+            results.forEach(element => {
+             
+                console.log(element.title + "\nSimilarity score: " + Math.round(element.score * 100) + "%\n")
+
+            });
+
+        }
 
     }
 
