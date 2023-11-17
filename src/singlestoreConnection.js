@@ -68,7 +68,9 @@ const searchVec = (connection, embedding, filter_by) => {
     let vector = (column == "title" ? "title_vector" : "content_vector")
 
     //have to use escape quotes, dot_product and json_array_pack suffic (F_64) is dependent on what was used in the insert statement 
-    let user_query = "SELECT " + column + ", DOT_PRODUCT_F64(JSON_ARRAY_PACK_F64(\'[" + embedding + "]\'), " + vector + ") AS score FROM wikipedia ORDER BY score DESC LIMIT 5"
+    let user_query = "SELECT " + column +
+     ", DOT_PRODUCT_F64(JSON_ARRAY_PACK_F64(\'[" + embedding + "]\'), " + vector +
+      ") AS score FROM wikipedia ORDER BY score DESC LIMIT 5"
 
     connection.query(user_query, (err, results, fields) => {
         if (err) {
@@ -78,7 +80,7 @@ const searchVec = (connection, embedding, filter_by) => {
         }
 
         // Process the query results
-        printResults("vector", results, filter_by)
+        printResults("vector", results, column)
 
     })
 
@@ -143,7 +145,7 @@ function printResults(type, results, filter) {
     else {
 
         //format for content
-        if (filter == "content") {
+        if (filter == "text") {
             results.forEach(element => {
 
                 console.log(element.text.slice(0, 100) + "...\nSimilarity score: " + Math.round(element.score * 100) + "%\n")
