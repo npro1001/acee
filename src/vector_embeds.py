@@ -5,11 +5,11 @@ import pandas as pd
 import os
 from ast import literal_eval
 
-HOST = 'svc-012df3dd-534d-430a-a419-76bdec008e59-dml.gcp-scarolina-1.svc.singlestore.com';
-USER = 'admin';
-PASSWORD = 'DRwx0KRhJ5Q9KL8JQSxrEc6nfLliGEES';
-DATABASE = 'vector_db';
-PORT = 3306
+HOST = os.getenv('HOST')
+USER = os.getenv('USER')
+PASSWORD = os.getenv('PASSWORD')
+DATABASE = os.getenv('VEC_DATABASE')
+PORT = os.getenv('PORT')
 
 df = pd.read_csv(
     'vector_database_wikipedia_articles_embedded.csv'
